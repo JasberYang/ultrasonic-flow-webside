@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>R vision 睿视智能科技 | RUF-100 外夹式超声波流量计</title>
+    <meta
+      name="description"
+      content="R vision 睿视智能科技 RUF-100 外夹式超声波流量计，无需切管，即装即测，适用于水、油、化学药液与多种管材。"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="主导航">
+      <a class="brand" href="#top" aria-label="R vision 首页">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span>
+          <strong>睿视智能科技</strong>
+          <small>R vision</small>
+        </span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">产品优势</a>
+        <a href="#principle">检测原理</a>
+        <a href="#flow-demo">适用介质</a>
+        <a href="#applications">应用场景</a>
+        <a href="#install">安装方式</a>
+        <a href="#specs">选型参数</a>
+      </nav>
+      <a class="nav-cta" href="#contact">联系咨询</a>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-backdrop" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow">RUF-100 Clamp-on Ultrasonic Flowmeter</p>
+          <h1>外夹式超声波流量计</h1>
+          <p class="hero-copy">
+            无需切管、无需停机，夹装于既有管路即可完成液体流量监控。面向设备冷却、流体供应与产线改造场景快速部署。
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#flow-demo">查看适用工况</a>
+            <a class="secondary-button" href="#specs">查看参数</a>
+          </div>
+          <dl class="hero-stats" aria-label="核心参数">
+            <div>
+              <dt>DN8-DN50</dt>
+              <dd>兼容管径</dd>
+            </div>
+            <div>
+              <dt>1% FS</dt>
+              <dd>重复精度</dd>
+            </div>
+            <div>
+              <dt>IP65</dt>
+              <dd>工业防护</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="hero-product" aria-label="RUF-100 产品主图">
+          <img src="图片 1.png" alt="Rvision RUF-100 外夹式超声波流量计主机" />
+        </div>
+      </section>
+
+      <section class="section application-nav-section" aria-label="应用行业导航">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Applications</p>
+          <h2>典型应用行业</h2>
+        </div>
+        <div class="application-nav-strip">
+          <a class="app-nav-card" href="#app-ai-server">
+            <span class="app-nav-window">
+              <img src="应用图片/ai-server-cdu.jpg" alt="AI服务器 CDU 液冷应用场景" />
+            </span>
+            <strong>AI服务器</strong>
+          </a>
+          <a class="app-nav-card" href="#app-semiconductor">
+            <span class="app-nav-window">
+              <img src="应用图片/semiconductor-cleaning.jpg" alt="半导体清洗设备应用场景" />
+            </span>
+            <strong>半导体</strong>
+          </a>
+          <a class="app-nav-card" href="#app-photovoltaic">
+            <span class="app-nav-window">
+              <img src="应用图片/photovoltaic-texturing.jpg" alt="光伏制绒应用场景" />
+            </span>
+            <strong>光伏</strong>
+          </a>
+          <a class="app-nav-card" href="#app-automotive">
+            <span class="app-nav-window">
+              <img src="应用图片/automotive-body-paint.jpg" alt="汽车车身涂装应用场景" />
+            </span>
+            <strong>汽车</strong>
+          </a>
+          <a class="app-nav-card" href="#app-metal">
+            <span class="app-nav-window">
+              <img src="应用图片/metal-machining.jpg" alt="金属加工机床应用场景" />
+            </span>
+            <strong>金属加工</strong>
+          </a>
+          <a class="app-nav-card" href="#app-food">
+            <span class="app-nav-window">
+              <img src="应用图片/food-canning.jpg" alt="食品罐装应用场景" />
+            </span>
+            <strong>食品</strong>
+          </a>
+          <a class="app-nav-card" href="#app-medical">
+            <span class="app-nav-window">
+              <img src="应用图片/pharma-ro-water.jpg" alt="医药 RO 水系统应用场景" />
+            </span>
+            <strong>医药</strong>
+          </a>
+        </div>
+      </section>
+
+      <section class="section intro-band" id="features">
+        <div class="section-heading">
+          <p class="eyebrow">Why RUF-100</p>
+          <h2>为既有管路加装流量监测而生</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <span class="feature-index">01</span>
+            <h3>外夹安装</h3>
+            <p>夹持机构固定、主机上锁，常规工具即可完成安装，不改变原有管线结构。</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-index">02</span>
+            <h3>非接触测量</h3>
+            <p>探头不接触流体，无可动部件，减少压力损失、污染风险与维护负担。</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-index">03</span>
+            <h3>系统接入</h3>
+            <p>支持 OLED 显示、NPN/PNP、4-20mA、报警输出与 MODBUS 通讯协议。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section principle-section" id="principle">
+        <div class="section-heading">
+          <p class="eyebrow">Measurement Principle</p>
+          <h2>检测原理</h2>
+        </div>
+        <div class="principle-layout">
+          <div class="principle-visual" aria-label="RUF-100 超声波测量路径动态示意">
+            <div class="principle-flow-label" aria-hidden="true">流向</div>
+            <img src="安装图2.png" alt="RUF-100 外夹式超声波流量计超声波测量路径示意" />
+            <span class="sensor-label sensor-a">A</span>
+            <span class="sensor-label sensor-b">B</span>
+            <span class="sonic-beam beam-down"></span>
+            <span class="sonic-beam beam-up"></span>
+            <span class="sonic-ripple ripple-a"></span>
+            <span class="sonic-ripple ripple-b"></span>
+          </div>
+          <div class="principle-copy">
+            <p>
+              RUF-100 通过外夹式传感器在管壁外发射与接收超声波信号，测量 A 点到 B 点双向传播的时间差。流体速度变化时，顺流与逆流传播时间产生差异，设备据此换算瞬时流量与累计流量。
+            </p>
+            <div class="principle-cards">
+              <article>
+                <h3>低流量</h3>
+                <div class="signal-chart low-flow" aria-hidden="true">
+                  <span class="axis x-axis"></span>
+                  <span class="axis y-axis"></span>
+                  <span class="signal-line"></span>
+                  <span class="time-arrow">t1</span>
+                </div>
+              </article>
+              <article>
+                <h3>高流量</h3>
+                <div class="signal-chart high-flow" aria-hidden="true">
+                  <span class="axis x-axis"></span>
+                  <span class="axis y-axis"></span>
+                  <span class="signal-line"></span>
+                  <span class="time-arrow">t2</span>
+                </div>
+              </article>
+            </div>
+            <div class="patent-note">
+              <span>专利</span>
+              <strong>一种基于双向特征融合神经网络的外夹式超声流量测量方法和装置</strong>
+              <small>专利号 CN121705993A</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section compatibility-section" id="flow-demo">
+        <div class="section-heading">
+          <p class="eyebrow">Process Compatibility</p>
+          <h2>同一台设备，覆盖多种液体与管材</h2>
+          <p>RUF-100 面向既有管路加装监测，覆盖常见液体介质与不同管材，适合设备冷却、流体供应和产线改造场景。</p>
+        </div>
+
+        <div class="compatibility-layout">
+          <article class="compatibility-group">
+            <div class="compatibility-group-head">
+              <span>Liquid Media</span>
+              <h3>流量介质</h3>
+            </div>
+            <div class="material-grid">
+              <article class="material-card">
+                <h4>水</h4>
+                <figure>
+                  <img src="材质图片/liquid-water.jpg" alt="透明水流介质材质图" />
+                </figure>
+                <p>冷却水、循环水与去离子水流量监控。</p>
+              </article>
+              <article class="material-card">
+                <h4>油</h4>
+                <figure>
+                  <img src="材质图片/liquid-oil.jpg" alt="油类介质材质图" />
+                </figure>
+                <p>油类介质供应、回流与设备状态确认。</p>
+              </article>
+              <article class="material-card">
+                <h4>化学药液</h4>
+                <figure>
+                  <img src="材质图片/liquid-chemical.jpg" alt="化学药液介质材质图" />
+                </figure>
+                <p>化学试剂、清洗液与工艺药液流量监测。</p>
+              </article>
+            </div>
+          </article>
+
+          <article class="compatibility-group">
+            <div class="compatibility-group-head">
+              <span>Pipe Materials</span>
+              <h3>管子材质</h3>
+            </div>
+            <div class="material-grid">
+              <article class="material-card">
+                <h4>金属管</h4>
+                <figure>
+                  <img src="材质图片/pipe-metal.jpg" alt="金属管材质图" />
+                </figure>
+                <p>适配不锈钢、铁、铝、铜等常见金属管。</p>
+              </article>
+              <article class="material-card">
+                <h4>塑料管</h4>
+                <figure>
+                  <img src="材质图片/pipe-plastic.jpg" alt="塑料管材质图" />
+                </figure>
+                <p>适配透明树脂管、工程塑料管等管路。</p>
+              </article>
+              <article class="material-card">
+                <h4>PVC 管</h4>
+                <figure>
+                  <img src="材质图片/pipe-pvc.jpg" alt="PVC 管材质图" />
+                </figure>
+                <p>适配 PVC 管及其他常见树脂管材。</p>
+              </article>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section media-section" id="install">
+        <div class="media-copy">
+          <p class="eyebrow">Installation</p>
+          <h2>几分钟完成部署，无需切管停机</h2>
+          <ol class="install-steps">
+            <li><span>1</span>清洁管道表面，确保夹持机构贴合。</li>
+            <li><span>2</span>安装夹持机构，拧紧螺丝并确认不松动。</li>
+            <li><span>3</span>固定主机，连接 M12 航空插头后运行。</li>
+          </ol>
+        </div>
+        <div class="install-image">
+          <img src="安装图1.png" alt="RUF-100 外夹式超声波流量计垂直管道安装效果" />
+        </div>
+      </section>
+
+      <section class="section applications-section" id="applications">
+        <div class="section-heading">
+          <p class="eyebrow">Application Part</p>
+          <h2>应用场景</h2>
+          <p>以下图片窗口已预留，后期可替换为行业现场照片、设备局部图或产线应用图。</p>
+        </div>
+        <div class="application-grid">
+          <article class="application-card" id="app-ai-server">
+            <div class="application-image-window">
+              <img src="应用图片/ai-server-cdu.jpg" alt="AI服务器 CDU 液冷应用场景" />
+            </div>
+            <h3>AI服务器</h3>
+            <p>用于液冷系统、冷却水回路与机柜管路的流量确认。</p>
+          </article>
+          <article class="application-card" id="app-semiconductor">
+            <div class="application-image-window">
+              <img src="应用图片/semiconductor-cleaning.jpg" alt="半导体清洗设备应用场景" />
+            </div>
+            <h3>半导体</h3>
+            <p>用于工艺冷却水、药液供应与设备加装监测。</p>
+          </article>
+          <article class="application-card" id="app-photovoltaic">
+            <div class="application-image-window">
+              <img src="应用图片/photovoltaic-texturing.jpg" alt="光伏制绒应用场景" />
+            </div>
+            <h3>光伏</h3>
+            <p>用于清洗、冷却、化学液体输送等管路流量监控。</p>
+          </article>
+          <article class="application-card" id="app-automotive">
+            <div class="application-image-window">
+              <img src="应用图片/automotive-body-paint.jpg" alt="汽车车身涂装应用场景" />
+            </div>
+            <h3>汽车</h3>
+            <p>用于测试台架、冷却回路与生产设备流体确认。</p>
+          </article>
+          <article class="application-card" id="app-metal">
+            <div class="application-image-window">
+              <img src="应用图片/metal-machining.jpg" alt="金属加工机床应用场景" />
+            </div>
+            <h3>金属加工</h3>
+            <p>用于切削液、冷却液与循环水管路的流量监测。</p>
+          </article>
+          <article class="application-card" id="app-food">
+            <div class="application-image-window">
+              <img src="应用图片/food-canning.jpg" alt="食品罐装应用场景" />
+            </div>
+            <h3>食品</h3>
+            <p>用于非接触式管外测量，减少对既有管线和介质的影响。</p>
+          </article>
+          <article class="application-card" id="app-medical">
+            <div class="application-image-window">
+              <img src="应用图片/pharma-ro-water.jpg" alt="医药 RO 水系统应用场景" />
+            </div>
+            <h3>医药</h3>
+            <p>用于纯水、试剂、清洗液等管路流量的加装监控。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section specs-section" id="specs">
+        <div class="section-heading">
+          <p class="eyebrow">Selection</p>
+          <h2>四款主机覆盖 DN8-DN50</h2>
+        </div>
+        <div class="spec-table-wrap">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>型号</th>
+                <th>夹持机构</th>
+                <th>适配管道外径</th>
+                <th>最大额定流量</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RUF-100-10</td>
+                <td>DN8 / DN10</td>
+                <td>Φ10-22 mm</td>
+                <td>20 / 30 L/min</td>
+              </tr>
+              <tr>
+                <td>RUF-100-20</td>
+                <td>DN15 / DN20 / DN25</td>
+                <td>Φ22-37 mm</td>
+                <td>60 / 100 L/min</td>
+              </tr>
+              <tr>
+                <td>RUF-100-32</td>
+                <td>DN32 / DN40</td>
+                <td>Φ37-52 mm</td>
+                <td>200 / 300 L/min</td>
+              </tr>
+              <tr>
+                <td>RUF-100-50</td>
+                <td>DN50</td>
+                <td>Φ52-65 mm</td>
+                <td>400 / 600 L/min</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="spec-chips" aria-label="通用规格">
+          <span>水 / 油 / 化学试剂</span>
+          <span>金属管 / 树脂管</span>
+          <span>0-85 °C 管道表面温度</span>
+          <span>10-26 V DC</span>
+          <span>OLED 128×64</span>
+          <span>MODBUS</span>
+        </div>
+      </section>
+
+      <section class="contact-section" id="contact">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>获取选型建议与产品资料</h2>
+          <p>把现场管径、液体类型、管材与输出需求发给我们，销售工程师会协助确认型号。</p>
+        </div>
+        <address class="contact-list">
+          <span>公司：睿视智能科技</span>
+          <span>电话：请替换为联系电话</span>
+          <span>邮箱：请替换为邮箱地址</span>
+          <span>官网：请替换为官网地址</span>
+        </address>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
