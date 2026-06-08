@@ -443,8 +443,8 @@ h3 {
 
 .principle-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.48fr);
-  gap: clamp(28px, 5vw, 72px);
+  grid-template-columns: minmax(0, 0.95fr) minmax(500px, 0.72fr);
+  gap: clamp(28px, 4vw, 54px);
   align-items: start;
   margin-top: 28px;
 }
@@ -487,65 +487,69 @@ h3 {
   z-index: 9;
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
+  transform: translateX(-50%);
   color: #fff;
-  background: #e00012;
-  font-size: 26px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: rgba(218, 32, 44, 0.92);
+  box-shadow: 0 8px 20px rgba(120, 12, 22, 0.22);
+  font-size: 20px;
   font-weight: 800;
 }
 
 .sensor-a {
-  left: 42%;
-  top: 33%;
+  left: 40%;
+  top: 38%;
 }
 
 .sensor-b {
-  right: 32%;
-  top: 33%;
+  left: 70%;
+  top: 38%;
 }
 
 .sonic-beam {
   position: absolute;
   z-index: 8;
-  width: 160px;
-  height: 5px;
+  width: 142px;
+  height: 4px;
   border-radius: 999px;
   background:
-    repeating-linear-gradient(90deg, rgba(255, 52, 52, 0.95) 0 12px, rgba(255, 158, 86, 0.18) 13px 24px),
-    #ef1a2d;
+    repeating-linear-gradient(90deg, rgba(238, 42, 56, 0.92) 0 10px, rgba(255, 157, 91, 0.2) 11px 22px),
+    #dc2030;
   transform-origin: left center;
   animation: sonicPulse 1.4s linear infinite;
-  filter: drop-shadow(0 0 8px rgba(235, 47, 62, 0.4));
+  filter: drop-shadow(0 0 7px rgba(235, 47, 62, 0.34));
 }
 
 .sonic-beam::after {
   content: "";
   position: absolute;
-  right: -10px;
-  top: -7px;
-  border-left: 14px solid #e00012;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
+  right: -9px;
+  top: -6px;
+  border-left: 12px solid #dc2030;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
 }
 
 .beam-down {
-  left: 45%;
+  left: 44%;
   top: 55%;
   transform: rotate(58deg);
 }
 
 .beam-up {
-  left: 55%;
-  top: 69%;
+  left: 60%;
+  top: 81%;
   transform: rotate(-58deg);
 }
 
 .sonic-ripple {
   position: absolute;
   z-index: 7;
-  width: 150px;
-  height: 90px;
+  width: 132px;
+  height: 78px;
   border-radius: 50%;
   border: 2px solid rgba(239, 26, 45, 0.28);
   opacity: 0.86;
@@ -553,13 +557,13 @@ h3 {
 }
 
 .ripple-a {
-  left: 43%;
-  top: 52%;
+  left: 42%;
+  top: 53%;
 }
 
 .ripple-b {
-  left: 50%;
-  top: 52%;
+  left: 49%;
+  top: 53%;
   animation-delay: 0.4s;
 }
 
@@ -609,7 +613,7 @@ h3 {
 
 .signal-chart {
   position: relative;
-  height: 142px;
+  height: 158px;
   overflow: hidden;
   background: #e7eef3;
 }
@@ -620,9 +624,9 @@ h3 {
 }
 
 .x-axis {
-  left: 28px;
+  left: 42px;
   right: 18px;
-  bottom: 28px;
+  bottom: 36px;
   height: 2px;
 }
 
@@ -637,9 +641,9 @@ h3 {
 }
 
 .y-axis {
-  left: 28px;
+  left: 42px;
   top: 20px;
-  bottom: 28px;
+  bottom: 36px;
   width: 2px;
 }
 
@@ -653,11 +657,33 @@ h3 {
   border-right: 6px solid transparent;
 }
 
+.chart-axis-label {
+  position: absolute;
+  z-index: 2;
+  color: #424b55;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.y-label {
+  left: 13px;
+  top: 52px;
+  writing-mode: vertical-rl;
+  letter-spacing: 2px;
+}
+
+.x-label {
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+}
+
 .signal-line {
   position: absolute;
-  left: 30px;
+  left: 44px;
   right: 26px;
-  bottom: 58px;
+  bottom: 68px;
   height: 2px;
   background: #0c8fdc;
 }
@@ -681,39 +707,49 @@ h3 {
 
 .time-arrow {
   position: absolute;
-  left: 36%;
-  top: 40px;
+  left: 37%;
+  top: 35px;
+  width: 76px;
+  transform: translateX(-50%);
   color: var(--ink);
-  font-size: 18px;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
 }
 
 .time-arrow::before {
   content: "";
   position: absolute;
-  left: -62px;
-  top: 11px;
-  width: 118px;
-  height: 2px;
+  left: 0;
+  right: 0;
+  top: 28px;
+  height: 3px;
   background: #a8b8c6;
 }
 
 .time-arrow::after {
   content: "";
   position: absolute;
-  right: -62px;
-  top: 6px;
+  right: -2px;
+  top: 22px;
   border-left: 9px solid #a8b8c6;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
 }
 
-.high-flow .time-arrow::before {
-  width: 74px;
-  left: -42px;
+.low-flow .time-arrow::before {
+  width: auto;
 }
 
-.high-flow .time-arrow::after {
-  right: -42px;
+.high-flow .time-arrow::before {
+  width: auto;
+  left: 0;
+}
+
+.high-flow .time-arrow {
+  left: 33%;
+  width: 52px;
 }
 
 .patent-note {
@@ -915,13 +951,13 @@ h3 {
 
 .spec-table {
   width: 100%;
-  min-width: 1180px;
+  min-width: 1820px;
   border-collapse: collapse;
 }
 
 .spec-table th,
 .spec-table td {
-  padding: 15px 16px;
+  padding: 14px 15px;
   border-bottom: 1px solid var(--line);
   text-align: left;
   white-space: nowrap;
@@ -1129,13 +1165,13 @@ h3 {
   }
 
   .sensor-a {
-    left: 38%;
-    top: 32%;
+    left: 41%;
+    top: 34%;
   }
 
   .sensor-b {
-    right: 26%;
-    top: 32%;
+    left: 59%;
+    top: 34%;
   }
 
   .sonic-beam {
@@ -1144,13 +1180,13 @@ h3 {
   }
 
   .beam-down {
-    left: 42%;
+    left: 41%;
     top: 55%;
   }
 
   .beam-up {
     left: 52%;
-    top: 69%;
+    top: 68%;
   }
 
   .sonic-ripple {
@@ -1159,13 +1195,13 @@ h3 {
   }
 
   .ripple-a {
-    left: 39%;
-    top: 52%;
+    left: 38%;
+    top: 53%;
   }
 
   .ripple-b {
     left: 49%;
-    top: 52%;
+    top: 53%;
   }
 
   .principle-cards,

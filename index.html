@@ -145,7 +145,6 @@
         </div>
         <div class="principle-layout">
           <div class="principle-visual" aria-label="YK-C 超声波测量路径动态示意">
-            <div class="principle-flow-label" aria-hidden="true">流向</div>
             <img src="https://rvisiontek.com/wp-content/uploads/2026/06/安装图2.png" alt="YK-C 外夹式超声波流量计超声波测量路径示意" />
             <span class="sensor-label sensor-a">A</span>
             <span class="sensor-label sensor-b">B</span>
@@ -164,6 +163,8 @@
                 <div class="signal-chart low-flow" aria-hidden="true">
                   <span class="axis x-axis"></span>
                   <span class="axis y-axis"></span>
+                  <span class="chart-axis-label y-label">信号</span>
+                  <span class="chart-axis-label x-label">时间</span>
                   <span class="signal-line"></span>
                   <span class="time-arrow">t1</span>
                 </div>
@@ -173,6 +174,8 @@
                 <div class="signal-chart high-flow" aria-hidden="true">
                   <span class="axis x-axis"></span>
                   <span class="axis y-axis"></span>
+                  <span class="chart-axis-label y-label">信号</span>
+                  <span class="chart-axis-label x-label">时间</span>
                   <span class="signal-line"></span>
                   <span class="time-arrow">t2</span>
                 </div>
@@ -305,7 +308,7 @@
               <img src="https://rvisiontek.com/wp-content/uploads/2026/06/automotive-body-paint.jpg" alt="汽车车身涂装应用场景" />
             </div>
             <h3>汽车</h3>
-            <p>用于测试台架、冷却回路与生产设备流体确认。</p>
+            <p>汽车喷涂，设备过程流量检测。</p>
           </article>
           <article class="application-card" id="app-metal">
             <div class="application-image-window">
@@ -340,96 +343,110 @@
           <table class="spec-table">
             <thead>
               <tr>
-                <th>参数</th>
-                <th>YK-C-10</th>
-                <th>YK-C-20</th>
-                <th>YK-C-32</th>
-                <th>YK-C-50</th>
-                <th>YK-C-80</th>
-                <th>YK-C-100</th>
-                <th>YK-C-200</th>
+                <th>型号</th>
+                <th>YK-C1016</th>
+                <th>YK-C1622</th>
+                <th>YK-C2228</th>
+                <th>YK-C2837</th>
+                <th>YK-C3744</th>
+                <th>YK-C4452</th>
+                <th>YK-C5265</th>
+                <th>YK-C6683</th>
+                <th>YK-C83100</th>
+                <th>YK-C101127</th>
+                <th>YK-C127152</th>
+                <th>YK-C152191</th>
+                <th>YK-C191220</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>夹持机构</td>
-                <td>DN8 / DN10</td>
-                <td>DN15 / DN20 / DN25</td>
-                <td>DN32 / DN40</td>
+                <td>适配外径（mm）</td>
+                <td>10~16</td>
+                <td>16~22</td>
+                <td>22~28</td>
+                <td>28~37</td>
+                <td>37~44</td>
+                <td>44~52</td>
+                <td>52~65</td>
+                <td>66~83</td>
+                <td>83~101</td>
+                <td>101~127</td>
+                <td>127~152</td>
+                <td>152~191</td>
+                <td>191~220</td>
+              </tr>
+              <tr>
+                <td>适配内径</td>
+                <td>DN10</td>
+                <td>DN15</td>
+                <td>DN20</td>
+                <td>DN25</td>
+                <td>DN32</td>
+                <td>DN40</td>
                 <td>DN50</td>
-                <td>DN65 / DN80</td>
-                <td>DN100 / DN125</td>
-                <td>DN150 / DN200</td>
+                <td>DN65</td>
+                <td>DN80</td>
+                <td>DN100</td>
+                <td>DN125</td>
+                <td>DN150</td>
+                <td>DN200</td>
               </tr>
               <tr>
-                <td>适配管道外径</td>
-                <td>Φ10-22 mm</td>
-                <td>Φ22-37 mm</td>
-                <td>Φ37-52 mm</td>
-                <td>Φ52-65 mm</td>
-                <td>Φ65-95 mm</td>
-                <td>Φ95-145 mm</td>
-                <td>Φ145-220 mm</td>
-              </tr>
-              <tr>
-                <td>最大额定流量</td>
-                <td>20 / 30 L/min</td>
-                <td>60 / 100 L/min</td>
-                <td>200 / 300 L/min</td>
-                <td>400 / 600 L/min</td>
-                <td>1000 / 1500 L/min</td>
-                <td>2500 / 4000 L/min</td>
-                <td>6000 / 10000 L/min</td>
-              </tr>
-              <tr>
-                <td>切断流量(可调)</td>
-                <td>0.5 L/min</td>
-                <td>1.5 L/min</td>
-                <td>3 L/min</td>
-                <td>15 L/min</td>
-                <td>20 L/min</td>
-                <td>40 L/min</td>
-                <td>80 L/min</td>
+                <td>额定流量（L/min）</td>
+                <td>20</td>
+                <td>60</td>
+                <td>100</td>
+                <td>200</td>
+                <td>300</td>
+                <td>400</td>
+                <td>600</td>
+                <td>1000</td>
+                <td>1600</td>
+                <td>2700</td>
+                <td>4000</td>
+                <td>6000</td>
+                <td>10000</td>
               </tr>
               <tr>
                 <td>支持管道材质</td>
-                <td colspan="7">金属管 / 树脂管</td>
+                <td colspan="13">金属管 / 树脂管</td>
               </tr>
               <tr>
                 <td>支持的流体</td>
-                <td colspan="7">水（含DI）/ 油 / 化学试剂</td>
+                <td colspan="13">水（含DI）/ 油 / 化学试剂</td>
               </tr>
               <tr>
                 <td>管道表面温度</td>
-                <td colspan="7">-20~85℃（高温场景咨询）</td>
+                <td colspan="13">-20~85℃（高温场景咨询）</td>
               </tr>
               <tr>
                 <td>重复精度</td>
-                <td colspan="7">0.1%F.S.</td>
+                <td colspan="13">0.1%F.S.</td>
               </tr>
               <tr>
                 <td>显示方式</td>
-                <td colspan="7">OLED 128×64 点阵</td>
+                <td colspan="13">OLED 128×64 点阵</td>
               </tr>
               <tr>
                 <td>累计流量单位</td>
-                <td colspan="7">mL / L / m³</td>
+                <td colspan="13">mL / L / m³</td>
               </tr>
               <tr>
                 <td>输出</td>
-                <td colspan="7">NPN/PNP · 4-20mA · 报警</td>
+                <td colspan="13">NPN/PNP · 4-20mA · 报警</td>
               </tr>
               <tr>
                 <td>通讯协议</td>
-                <td colspan="7">MODBUS</td>
+                <td colspan="13">MODBUS</td>
               </tr>
               <tr>
                 <td>电源电压</td>
-                <td colspan="7">10-26 V DC</td>
+                <td colspan="13">10-26 V DC</td>
               </tr>
               <tr>
                 <td>外壳防护等级</td>
-                <td colspan="7">IP65</td>
+                <td colspan="13">IP65</td>
               </tr>
             </tbody>
           </table>
