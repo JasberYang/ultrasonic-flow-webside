@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Rvision Catalog Gate
  * Description: Adds verified catalog download, lead capture, email verification, and CSV export for R vision.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: R vision
  */
 
@@ -51,6 +51,7 @@ final class Rvision_Catalog_Gate
     {
         add_rewrite_rule('^catalog-download/?$', 'index.php?rvision_catalog_action=download', 'top');
         add_rewrite_rule('^catalog-register/?$', 'index.php?rvision_catalog_action=register', 'top');
+        add_rewrite_rule('^catalog-login/?$', 'index.php?rvision_catalog_action=register', 'top');
         add_rewrite_rule('^catalog-verify/?$', 'index.php?rvision_catalog_action=verify', 'top');
     }
 
@@ -324,7 +325,7 @@ final class Rvision_Catalog_Gate
 
     private function handle_download(): void
     {
-        if (!$this->verified_cookie()) {
+        if (!$this->has_download_access()) {
             wp_safe_redirect(home_url('/catalog-register/'));
             exit;
         }
@@ -466,6 +467,9 @@ final class Rvision_Catalog_Gate
 
     private function render_register_page(array $values, array $errors, bool $success): void
     {
+        $has_access = $this->has_download_access();
+        $status_label = $has_access ? '已登录' : ($success ? '待邮箱验证' : '未登录');
+        $status_class = $has_access ? 'is-ok' : ($success ? 'is-pending' : 'is-muted');
         status_header(200);
         ?>
         <!doctype html>
@@ -475,36 +479,73 @@ final class Rvision_Catalog_Gate
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>下载 YK-C 产品目录 | R vision</title>
             <style>
+                *{box-sizing:border-box}
                 body{margin:0;background:#f4f7f8;color:#14171a;font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+                a{color:inherit}
                 .rv-wrap{min-height:100vh;display:grid;place-items:center;padding:32px 18px}
                 .rv-panel{width:min(760px,100%);background:#fff;border:1px solid #d9e0e6;border-radius:8px;box-shadow:0 24px 70px rgba(16,31,45,.14);overflow:hidden}
                 .rv-head{padding:28px 32px;color:#fff;background:#14171a}
-                .rv-head a{color:#fff;text-decoration:none}
+                .rv-head-top{display:flex;align-items:center;justify-content:space-between;gap:18px}
+                .rv-brand{color:#fff;text-decoration:none;font-weight:800}
                 .rv-head p{margin:10px 0 0;color:rgba(255,255,255,.72);line-height:1.7}
                 .rv-body{padding:28px 32px}
+                .rv-status{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:6px 8px 6px 10px;border:1px solid rgba(255,255,255,.18);border-radius:8px;background:rgba(255,255,255,.08);font-size:13px;white-space:nowrap}
+                .rv-status-dot{width:8px;height:8px;border-radius:999px;background:#9aa4ad}
+                .rv-status.is-ok .rv-status-dot{background:#33d08f}
+                .rv-status.is-pending .rv-status-dot{background:#f0b429}
+                .rv-status a{display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:6px;background:#fff;color:#14171a;text-decoration:none;font-weight:800}
                 .rv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-                label{display:grid;gap:7px;font-weight:800}
-                input,select{width:100%;height:44px;border:1px solid #cfd8df;border-radius:8px;padding:0 12px;font:inherit}
+                label{display:flex;flex-direction:column;gap:7px;min-width:0;font-weight:800}
+                .rv-label-text{display:flex;align-items:center;gap:4px;line-height:1.35}
+                input,select{display:block;width:100%;height:44px;border:1px solid #cfd8df;border-radius:8px;background:#fff;padding:0 12px;font:inherit}
                 .rv-full{grid-column:1/-1}
-                .rv-button{border:0;border-radius:8px;background:#d33838;color:#fff;font-weight:800;padding:13px 20px;cursor:pointer}
+                .rv-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
+                .rv-form-actions{grid-column:1/-1;margin-top:2px}
+                .rv-button,.rv-link-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:8px;padding:0 18px;font-weight:800;text-decoration:none}
+                .rv-button{border:0;background:#d33838;color:#fff;cursor:pointer}
+                .rv-link-button{border:1px solid #cfd8df;background:#fff;color:#14171a}
                 .rv-errors,.rv-success{margin-bottom:18px;padding:14px 16px;border-radius:8px;line-height:1.7}
                 .rv-errors{background:#fff0f0;color:#9f1f1f}
                 .rv-success{background:#edf9f4;color:#166548}
                 .rv-required{color:#d33838}
-                @media (max-width:640px){.rv-grid{grid-template-columns:1fr}.rv-head,.rv-body{padding:24px 20px}}
+                @media (max-width:640px){.rv-head-top{align-items:flex-start;flex-direction:column}.rv-grid{grid-template-columns:1fr}.rv-head,.rv-body{padding:24px 20px}.rv-actions{align-items:stretch;flex-direction:column}.rv-button,.rv-link-button{width:100%}}
             </style>
         </head>
         <body>
             <main class="rv-wrap">
                 <section class="rv-panel">
                     <div class="rv-head">
-                        <a href="<?php echo esc_url(home_url('/')); ?>">R vision 睿视智能</a>
+                        <div class="rv-head-top">
+                            <a class="rv-brand" href="<?php echo esc_url(home_url('/')); ?>">R vision 睿视智能</a>
+                            <div class="rv-status <?php echo esc_attr($status_class); ?>">
+                                <span class="rv-status-dot" aria-hidden="true"></span>
+                                <span><?php echo esc_html($status_label); ?></span>
+                                <?php if ($has_access): ?>
+                                    <a href="<?php echo esc_url(home_url('/catalog-download/')); ?>">下载目录</a>
+                                <?php elseif ($success): ?>
+                                    <a href="<?php echo esc_url(home_url('/catalog-download/')); ?>">验证后下载</a>
+                                <?php else: ?>
+                                    <a href="#catalog-form">登录/验证</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                         <h1>下载 YK-C 产品目录</h1>
-                        <p>请完成邮箱验证。验证成功后，90 天内可直接下载产品目录。</p>
+                        <p><?php echo $has_access ? '您已完成验证，可直接下载产品目录。' : '请填写信息并完成邮箱验证。验证成功后，90 天内可直接下载产品目录。'; ?></p>
                     </div>
                     <div class="rv-body">
+                        <?php if ($has_access): ?>
+                            <div class="rv-success">当前状态为已登录，可直接下载 YK-C 产品目录。</div>
+                            <div class="rv-actions">
+                                <a class="rv-button" href="<?php echo esc_url(home_url('/catalog-download/')); ?>">下载目录</a>
+                                <a class="rv-link-button" href="<?php echo esc_url(home_url('/')); ?>">返回首页</a>
+                            </div>
+                        <?php endif; ?>
                         <?php if ($success): ?>
-                            <div class="rv-success">验证邮件已发送，请打开邮箱点击验证链接。验证完成后将自动下载目录。</div>
+                            <div class="rv-success">验证邮件已发送，请打开邮箱点击验证链接。验证完成后将自动下载目录；如浏览器未自动下载，可返回此页点击下载目录。</div>
+                            <div class="rv-actions">
+                                <a class="rv-button" href="<?php echo esc_url(home_url('/catalog-download/')); ?>">验证后下载目录</a>
+                                <a class="rv-link-button" href="<?php echo esc_url(home_url('/')); ?>">返回首页</a>
+                            </div>
                         <?php endif; ?>
                         <?php if ($errors): ?>
                             <div class="rv-errors">
@@ -513,18 +554,21 @@ final class Rvision_Catalog_Gate
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-                        <?php if (!$success): ?>
-                            <form method="post" action="<?php echo esc_url(home_url('/catalog-register/')); ?>">
+                        <?php if (!$success && !$has_access): ?>
+                            <form id="catalog-form" method="post" action="<?php echo esc_url(home_url('/catalog-register/')); ?>">
                                 <?php wp_nonce_field('rvision_catalog_register', 'rvision_nonce'); ?>
                                 <div class="rv-grid">
-                                    <label class="rv-full">公司 <span class="rv-required">*</span><input name="company" value="<?php echo esc_attr($values['company']); ?>" required></label>
-                                    <label>邮箱 <span class="rv-required">*</span><input name="email" type="email" value="<?php echo esc_attr($values['email']); ?>" required></label>
-                                    <label>手机号 <span class="rv-required">*</span><input name="phone" value="<?php echo esc_attr($values['phone']); ?>" required></label>
-                                    <label>姓 <span class="rv-required">*</span><input name="last_name" value="<?php echo esc_attr($values['last_name']); ?>" required></label>
-                                    <label>名 <input name="first_name" value="<?php echo esc_attr($values['first_name']); ?>"></label>
-                                    <label>部门 <input name="department" value="<?php echo esc_attr($values['department']); ?>"></label>
-                                    <label>需求 <select name="need_type"><option value="">请选择</option><?php foreach ($this->need_options() as $need): ?><option value="<?php echo esc_attr($need); ?>" <?php selected($values['need_type'], $need); ?>><?php echo esc_html($need); ?></option><?php endforeach; ?></select></label>
-                                    <div class="rv-full"><button class="rv-button" type="submit">发送验证邮件</button></div>
+                                    <label class="rv-full"><span class="rv-label-text">公司 <span class="rv-required">*</span></span><input name="company" value="<?php echo esc_attr($values['company']); ?>" autocomplete="organization" required></label>
+                                    <label><span class="rv-label-text">邮箱 <span class="rv-required">*</span></span><input name="email" type="email" value="<?php echo esc_attr($values['email']); ?>" autocomplete="email" required></label>
+                                    <label><span class="rv-label-text">手机号 <span class="rv-required">*</span></span><input name="phone" type="tel" value="<?php echo esc_attr($values['phone']); ?>" autocomplete="tel" required></label>
+                                    <label><span class="rv-label-text">姓 <span class="rv-required">*</span></span><input name="last_name" value="<?php echo esc_attr($values['last_name']); ?>" autocomplete="family-name" required></label>
+                                    <label><span class="rv-label-text">名</span><input name="first_name" value="<?php echo esc_attr($values['first_name']); ?>" autocomplete="given-name"></label>
+                                    <label><span class="rv-label-text">部门</span><input name="department" value="<?php echo esc_attr($values['department']); ?>" autocomplete="organization-title"></label>
+                                    <label><span class="rv-label-text">需求</span><select name="need_type"><option value="">请选择</option><?php foreach ($this->need_options() as $need): ?><option value="<?php echo esc_attr($need); ?>" <?php selected($values['need_type'], $need); ?>><?php echo esc_html($need); ?></option><?php endforeach; ?></select></label>
+                                    <div class="rv-actions rv-form-actions">
+                                        <button class="rv-button" type="submit">发送验证邮件</button>
+                                        <a class="rv-link-button" href="<?php echo esc_url(home_url('/')); ?>">返回首页</a>
+                                    </div>
                                 </div>
                             </form>
                         <?php endif; ?>
@@ -534,6 +578,11 @@ final class Rvision_Catalog_Gate
         </body>
         </html>
         <?php
+    }
+
+    private function has_download_access(): bool
+    {
+        return is_user_logged_in() || $this->verified_cookie();
     }
 
     private function email_template(array $values, string $verify_url): string

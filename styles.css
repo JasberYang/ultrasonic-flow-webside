@@ -64,10 +64,7 @@ a {
 .brand-logo {
   width: 124px;
   height: 46px;
-  padding: 5px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.94);
   object-fit: contain;
 }
 
@@ -1093,7 +1090,6 @@ h3 {
   .brand-logo {
     width: 96px;
     height: 38px;
-    padding: 4px 7px;
   }
 
   .nav-cta {
