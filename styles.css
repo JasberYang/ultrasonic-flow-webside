@@ -97,6 +97,7 @@ a {
 }
 
 .nav-links a,
+.catalog-cta,
 .nav-cta {
   transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
 }
@@ -111,6 +112,20 @@ a {
   border-radius: 8px;
   color: #fff;
   font-size: 14px;
+}
+
+.catalog-cta {
+  padding: 11px 17px;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--red);
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(211, 56, 56, 0.24);
+}
+
+.catalog-cta:hover {
+  background: #b82d2d;
 }
 
 .nav-cta:hover {
@@ -1104,6 +1119,11 @@ h3 {
 
   .nav-cta {
     padding: 9px 12px;
+  }
+
+  .catalog-cta {
+    padding: 9px 11px;
+    font-size: 13px;
   }
 
   .hero {
