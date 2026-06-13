@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Rvision Catalog Gate
  * Description: Adds public YK-C catalog download and product homepage for R vision.
- * Version: 1.0.6
+ * Version: 1.0.7
  * Author: R vision
  */
 
