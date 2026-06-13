@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Rvision Catalog Gate
- * Description: Adds public YK-C catalog download for R vision.
- * Version: 1.0.2
+ * Description: Adds public YK-C catalog download and product homepage for R vision.
+ * Version: 1.0.3
  * Author: R vision
  */
 
@@ -22,6 +22,7 @@ final class Rvision_Catalog_Gate
 
         add_action('init', [$plugin, 'register_routes']);
         add_filter('query_vars', [$plugin, 'query_vars']);
+        add_action('template_redirect', [$plugin, 'render_product_home'], 0);
         add_action('template_redirect', [$plugin, 'handle_frontend_route']);
         add_action('admin_menu', [$plugin, 'admin_menu']);
         add_action('admin_init', [$plugin, 'register_settings']);
@@ -138,6 +139,35 @@ final class Rvision_Catalog_Gate
             </form>
         </div>
         <?php
+    }
+
+    public function render_product_home(): void
+    {
+        if (!is_front_page() && !is_home()) {
+            return;
+        }
+
+        $site_dir = plugin_dir_path(__FILE__) . 'assets/site/';
+        $html_file = $site_dir . 'index.html';
+        $css_file = $site_dir . 'styles.css';
+        $js_file = $site_dir . 'script.js';
+
+        if (!is_readable($html_file) || !is_readable($css_file) || !is_readable($js_file)) {
+            return;
+        }
+
+        $html = file_get_contents($html_file);
+        $css = file_get_contents($css_file);
+        $js = file_get_contents($js_file);
+
+        $html = preg_replace('#<link\\s+rel=["\\\']stylesheet["\\\']\\s+href=["\\\']styles\\.css["\\\']\\s*/?>#i', '<style>' . $css . '</style>', $html, 1);
+        $html = preg_replace('#<script\\s+src=["\\\']script\\.js["\\\']></script>#i', '<script>' . $js . '</script>', $html, 1);
+
+        status_header(200);
+        nocache_headers();
+        header('Content-Type: text/html; charset=UTF-8');
+        echo $html;
+        exit;
     }
 
     private function handle_download(): void

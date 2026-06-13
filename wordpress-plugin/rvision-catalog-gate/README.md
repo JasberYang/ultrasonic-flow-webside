@@ -1,9 +1,10 @@
 # Rvision Catalog Gate
 
-WordPress plugin for public YK-C catalog downloads.
+WordPress plugin for the R vision YK-C product homepage and public catalog downloads.
 
 ## Features
 
+- Serves the product homepage directly from bundled site files.
 - Adds `/catalog-download/` for direct public PDF download.
 - Redirects old `/catalog-register/`, `/catalog-login/`, and `/catalog-verify/` links to the direct download.
 - Does not require login, registration, email verification, or lead capture.
