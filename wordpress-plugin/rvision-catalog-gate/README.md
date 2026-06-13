@@ -5,6 +5,7 @@ WordPress plugin for the R vision YK-C product homepage and public catalog downl
 ## Features
 
 - Serves the product homepage directly from bundled site files.
+- Redirects `www.rvisiontek.com` requests to `rvisiontek.com`.
 - Adds `/catalog-download/` for direct public PDF download.
 - Redirects old `/catalog-register/`, `/catalog-login/`, and `/catalog-verify/` links to the direct download.
 - Does not require login, registration, email verification, or lead capture.
