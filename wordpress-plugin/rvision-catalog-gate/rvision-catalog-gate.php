@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Rvision Catalog Gate
  * Description: Adds public YK-C catalog download and product homepage for R vision.
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: R vision
  */
 
@@ -61,6 +61,15 @@ final class Rvision_Catalog_Gate
     public function handle_frontend_route(): void
     {
         $action = get_query_var('rvision_catalog_action');
+        if (!$action) {
+            $path = trim((string)parse_url(wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH), '/');
+            if ($path === 'catalog-download') {
+                $action = 'download';
+            } elseif (in_array($path, ['catalog-register', 'catalog-login', 'catalog-verify'], true)) {
+                $action = 'register';
+            }
+        }
+
         if (!$action) {
             return;
         }
