@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Rvision Catalog Gate
  * Description: Adds public YK-C catalog download and product homepage for R vision.
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author: R vision
  */
 
@@ -199,6 +199,7 @@ final class Rvision_Catalog_Gate
             wp_die('目录文件暂不可用，请联系销售工程师。');
         }
 
+        status_header(200);
         nocache_headers();
         header('Content-Type: application/pdf');
         header('Content-Length: ' . filesize($file));
