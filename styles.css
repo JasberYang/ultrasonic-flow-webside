@@ -1174,6 +1174,17 @@ h3 {
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
 }
 
+.member-dialog[data-active-view="login"],
+.member-dialog[data-active-view="register-code"],
+.member-dialog[data-active-view="reset-request"],
+.member-dialog[data-active-view="reset-code"] {
+  width: min(460px, 100%);
+}
+
+.member-dialog[data-active-view="register"] {
+  width: min(720px, 100%);
+}
+
 .member-dialog h2 {
   margin-bottom: 10px;
   font-size: clamp(28px, 4vw, 42px);
@@ -1219,8 +1230,16 @@ h3 {
 }
 
 .member-form {
-  display: grid;
+  display: none;
   gap: 14px;
+}
+
+.member-form.is-active {
+  display: grid;
+}
+
+.member-form[hidden] {
+  display: none !important;
 }
 
 .member-field-grid {

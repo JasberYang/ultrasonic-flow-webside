@@ -6,6 +6,7 @@ if ("scrollRestoration" in history) {
   const config = window.RVISION_MEMBER || {};
   const menu = document.querySelector("[data-member-menu]");
   const modal = document.querySelector("[data-member-modal]");
+  const dialog = modal?.querySelector("[data-active-view]");
   const message = document.querySelector("[data-member-message]");
   const title = document.querySelector("[data-member-title]");
   const description = document.querySelector("[data-member-description]");
@@ -48,8 +49,14 @@ if ("scrollRestoration" in history) {
 
   function setView(view) {
     forms.forEach((form) => {
-      form.hidden = form.dataset.memberView !== view;
+      const isActive = form.dataset.memberView === view;
+      form.hidden = !isActive;
+      form.classList.toggle("is-active", isActive);
+      form.setAttribute("aria-hidden", isActive ? "false" : "true");
     });
+    if (dialog) {
+      dialog.dataset.activeView = view;
+    }
     title.textContent = titles[view] || "会员中心";
     description.textContent = descriptions[view] || "";
     setMessage("");

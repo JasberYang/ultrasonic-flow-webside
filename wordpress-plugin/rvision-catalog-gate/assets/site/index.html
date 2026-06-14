@@ -510,20 +510,20 @@
 
     <div class="member-modal" data-member-modal hidden>
       <div class="member-modal-backdrop" data-member-close></div>
-      <section class="member-dialog" role="dialog" aria-modal="true" aria-labelledby="member-dialog-title">
+      <section class="member-dialog" data-active-view="login" role="dialog" aria-modal="true" aria-labelledby="member-dialog-title">
         <button class="member-close" type="button" aria-label="关闭" data-member-close>×</button>
         <p class="eyebrow">Member</p>
         <h2 id="member-dialog-title" data-member-title>会员登录</h2>
         <p class="member-description" data-member-description>输入邮箱和密码登录后即可下载产品目录。</p>
         <p class="member-message" data-member-message></p>
 
-        <form class="member-form" data-member-view="login">
+        <form class="member-form is-active" data-member-view="login">
           <label>
-            邮箱
+            <span class="field-label">邮箱/账户 <span class="required-star">*</span></span>
             <input name="email" type="email" autocomplete="email" required />
           </label>
           <label>
-            密码
+            <span class="field-label">密码 <span class="required-star">*</span></span>
             <input name="password" type="password" autocomplete="current-password" required />
           </label>
           <button class="member-submit" type="submit">登录</button>
@@ -581,7 +581,7 @@
 
         <form class="member-form" data-member-view="register-code" hidden>
           <label>
-            邮箱验证码
+            <span class="field-label">邮箱验证码 <span class="required-star">*</span></span>
             <input name="code" type="text" inputmode="numeric" maxlength="6" required />
           </label>
           <button class="member-submit" type="submit">完成注册</button>
@@ -593,7 +593,7 @@
 
         <form class="member-form" data-member-view="reset-request" hidden>
           <label>
-            注册邮箱
+            <span class="field-label">注册邮箱 <span class="required-star">*</span></span>
             <input name="email" type="email" autocomplete="email" required />
           </label>
           <button class="member-submit" type="submit">发送找回验证码</button>
@@ -605,11 +605,11 @@
 
         <form class="member-form" data-member-view="reset-code" hidden>
           <label>
-            邮箱验证码
+            <span class="field-label">邮箱验证码 <span class="required-star">*</span></span>
             <input name="code" type="text" inputmode="numeric" maxlength="6" required />
           </label>
           <label>
-            新密码
+            <span class="field-label">新密码 <span class="required-star">*</span></span>
             <input name="password" type="password" autocomplete="new-password" minlength="8" required />
           </label>
           <button class="member-submit" type="submit">重置密码</button>
