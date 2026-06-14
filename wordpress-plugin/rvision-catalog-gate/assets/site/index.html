@@ -514,6 +514,7 @@
         <button class="member-close" type="button" aria-label="关闭" data-member-close>×</button>
         <p class="eyebrow">Member</p>
         <h2 id="member-dialog-title" data-member-title>会员登录</h2>
+        <p class="member-description" data-member-description>输入邮箱和密码登录后即可下载产品目录。</p>
         <p class="member-message" data-member-message></p>
 
         <form class="member-form" data-member-view="login">
@@ -527,7 +528,7 @@
           </label>
           <button class="member-submit" type="submit">登录</button>
           <div class="member-switches">
-            <button type="button" data-member-open="register">注册账号</button>
+            <button type="button" data-member-open="register">没有账户？注册</button>
             <button type="button" data-member-open="reset-request">忘记密码</button>
           </div>
         </form>
@@ -535,31 +536,31 @@
         <form class="member-form" data-member-view="register" hidden>
           <div class="member-field-grid">
             <label>
-              公司
+              <span class="field-label">公司 <span class="required-star">*</span></span>
               <input name="company" type="text" autocomplete="organization" required />
             </label>
             <label>
-              邮箱
+              <span class="field-label">邮箱 <span class="required-star">*</span></span>
               <input name="email" type="email" autocomplete="email" required />
             </label>
             <label>
-              手机号
+              <span class="field-label">手机号 <span class="required-star">*</span></span>
               <input name="phone" type="tel" autocomplete="tel" required />
             </label>
             <label>
-              姓
+              <span class="field-label">姓 <span class="required-star">*</span></span>
               <input name="last_name" type="text" autocomplete="family-name" required />
             </label>
             <label>
-              名
+              <span class="field-label">名</span>
               <input name="first_name" type="text" autocomplete="given-name" />
             </label>
             <label>
-              部门
+              <span class="field-label">部门</span>
               <input name="department" type="text" autocomplete="organization-title" />
             </label>
             <label>
-              需求
+              <span class="field-label">需求 <span class="required-star">*</span></span>
               <select name="demand" required>
                 <option value="quote">询价</option>
                 <option value="technical">技术咨询</option>
@@ -567,13 +568,14 @@
               </select>
             </label>
             <label>
-              密码
+              <span class="field-label">密码 <span class="required-star">*</span></span>
               <input name="password" type="password" autocomplete="new-password" minlength="8" required />
             </label>
           </div>
           <button class="member-submit" type="submit">发送邮箱验证码</button>
           <div class="member-switches">
-            <button type="button" data-member-open="login">已有账号，去登录</button>
+            <button type="button" data-member-open="login">已有账户？登录</button>
+            <button type="button" data-member-open="reset-request">忘记密码</button>
           </div>
         </form>
 
@@ -585,6 +587,7 @@
           <button class="member-submit" type="submit">完成注册</button>
           <div class="member-switches">
             <button type="button" data-member-open="register">重新填写注册信息</button>
+            <button type="button" data-member-open="login">已有账户？登录</button>
           </div>
         </form>
 
@@ -595,7 +598,8 @@
           </label>
           <button class="member-submit" type="submit">发送找回验证码</button>
           <div class="member-switches">
-            <button type="button" data-member-open="login">返回登录</button>
+            <button type="button" data-member-open="login">已有账户？登录</button>
+            <button type="button" data-member-open="register">没有账户？注册</button>
           </div>
         </form>
 
@@ -609,6 +613,9 @@
             <input name="password" type="password" autocomplete="new-password" minlength="8" required />
           </label>
           <button class="member-submit" type="submit">重置密码</button>
+          <div class="member-switches">
+            <button type="button" data-member-open="login">已有账户？登录</button>
+          </div>
         </form>
       </section>
     </div>

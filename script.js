@@ -8,6 +8,7 @@ if ("scrollRestoration" in history) {
   const modal = document.querySelector("[data-member-modal]");
   const message = document.querySelector("[data-member-message]");
   const title = document.querySelector("[data-member-title]");
+  const description = document.querySelector("[data-member-description]");
   const catalogLink = document.querySelector(".catalog-cta");
   const state = {
     loggedIn: false,
@@ -23,10 +24,18 @@ if ("scrollRestoration" in history) {
 
   const titles = {
     login: "会员登录",
-    register: "注册账号",
+    register: "注册会员账号",
     "register-code": "邮箱验证",
     "reset-request": "找回密码",
     "reset-code": "重置密码",
+  };
+
+  const descriptions = {
+    login: "输入邮箱和密码登录后即可下载产品目录。",
+    register: "请填写注册信息，带 * 的字段为必填项。提交后会发送邮箱验证码。",
+    "register-code": "请输入邮箱收到的 6 位验证码，验证后自动登录。",
+    "reset-request": "输入注册邮箱，我们会发送用于找回密码的验证码。",
+    "reset-code": "输入邮箱验证码和新密码完成重置。",
   };
 
   const forms = [...modal.querySelectorAll("[data-member-view]")];
@@ -42,6 +51,7 @@ if ("scrollRestoration" in history) {
       form.hidden = form.dataset.memberView !== view;
     });
     title.textContent = titles[view] || "会员中心";
+    description.textContent = descriptions[view] || "";
     setMessage("");
   }
 

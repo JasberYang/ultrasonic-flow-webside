@@ -1179,6 +1179,12 @@ h3 {
   font-size: clamp(28px, 4vw, 42px);
 }
 
+.member-description {
+  margin-bottom: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
 .member-close {
   position: absolute;
   top: 14px;
@@ -1231,6 +1237,17 @@ h3 {
   font-weight: 700;
 }
 
+.field-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.required-star {
+  color: var(--red);
+  font-weight: 900;
+}
+
 .member-form input,
 .member-form select {
   width: 100%;
@@ -1268,6 +1285,8 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .member-switches button {
