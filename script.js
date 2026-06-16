@@ -2,139 +2,292 @@ if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
 }
 
-(() => {
-  const config = window.RVISION_MEMBER || {};
-  const menu = document.querySelector("[data-member-menu]");
-  const modal = document.querySelector("[data-member-modal]");
-  const dialog = modal?.querySelector("[data-active-view]");
-  const message = document.querySelector("[data-member-message]");
-  const title = document.querySelector("[data-member-title]");
-  const description = document.querySelector("[data-member-description]");
-  const catalogLink = document.querySelector(".catalog-cta");
-  const state = {
+(function () {
+  var config = window.RVISION_MEMBER || {};
+  var menu = document.querySelector("[data-member-menu]");
+  var modal = document.querySelector("[data-member-modal]");
+  var state = {
     loggedIn: false,
     member: null,
     pendingDownload: false,
     registerEmail: "",
-    resetEmail: "",
+    resetEmail: ""
   };
 
   if (!menu || !modal) {
     return;
   }
 
-  const titles = {
+  var dialog = modal.querySelector("[data-active-view]");
+  var message = document.querySelector("[data-member-message]");
+  var title = document.querySelector("[data-member-title]");
+  var description = document.querySelector("[data-member-description]");
+  var catalogLink = document.querySelector(".catalog-cta");
+  var forms = modal.querySelectorAll("[data-member-view]");
+
+  var titles = {
     login: "会员登录",
     register: "注册会员账号",
     "register-code": "邮箱验证",
     "reset-request": "找回密码",
-    "reset-code": "重置密码",
+    "reset-code": "重置密码"
   };
 
-  const descriptions = {
+  var descriptions = {
     login: "输入邮箱和密码登录后即可下载产品目录。",
     register: "请填写注册信息，带 * 的字段为必填项。提交后会发送邮箱验证码。",
     "register-code": "请输入邮箱收到的 6 位验证码，验证后自动登录。",
     "reset-request": "输入注册邮箱，我们会发送用于找回密码的验证码。",
-    "reset-code": "输入邮箱验证码和新密码完成重置。",
+    "reset-code": "输入邮箱验证码和新密码完成重置。"
   };
 
-  const forms = [...modal.querySelectorAll("[data-member-view]")];
+  function addEvent(element, eventName, handler) {
+    if (!element) {
+      return;
+    }
+    if (element.addEventListener) {
+      element.addEventListener(eventName, handler, false);
+      return;
+    }
+    if (element.attachEvent) {
+      element.attachEvent("on" + eventName, function () {
+        handler.call(element, window.event);
+      });
+    }
+  }
 
-  function setMessage(text = "", type = "") {
-    message.textContent = text;
-    message.classList.toggle("is-error", type === "error");
-    message.classList.toggle("is-success", type === "success");
+  function preventDefault(event) {
+    if (!event) {
+      return;
+    }
+    if (event.preventDefault) {
+      event.preventDefault();
+    } else {
+      event.returnValue = false;
+    }
+  }
+
+  function getEventTarget(event) {
+    return event ? event.target || event.srcElement : null;
+  }
+
+  function hasClass(element, className) {
+    return (" " + (element.className || "") + " ").indexOf(" " + className + " ") > -1;
+  }
+
+  function addClass(element, className) {
+    if (!element || hasClass(element, className)) {
+      return;
+    }
+    element.className = element.className ? element.className + " " + className : className;
+  }
+
+  function removeClass(element, className) {
+    if (!element) {
+      return;
+    }
+    element.className = (" " + (element.className || "") + " ")
+      .replace(" " + className + " ", " ")
+      .replace(/^\s+|\s+$/g, "");
+  }
+
+  function toggleClass(element, className, enabled) {
+    if (enabled) {
+      addClass(element, className);
+    } else {
+      removeClass(element, className);
+    }
+  }
+
+  function setHidden(element, hidden) {
+    if (!element) {
+      return;
+    }
+    element.hidden = hidden;
+    if (hidden) {
+      element.setAttribute("hidden", "");
+    } else {
+      element.removeAttribute("hidden");
+    }
+  }
+
+  function isHidden(element) {
+    return !element || element.hidden || element.getAttribute("hidden") !== null;
+  }
+
+  function setText(element, text) {
+    if (element) {
+      element.textContent = text;
+    }
+  }
+
+  function setMessage(text, type) {
+    setText(message, text || "");
+    toggleClass(message, "is-error", type === "error");
+    toggleClass(message, "is-success", type === "success");
   }
 
   function setView(view) {
-    forms.forEach((form) => {
-      const isActive = form.dataset.memberView === view;
-      form.hidden = !isActive;
-      form.classList.toggle("is-active", isActive);
+    var i;
+    for (i = 0; i < forms.length; i += 1) {
+      var form = forms[i];
+      var isActive = form.getAttribute("data-member-view") === view;
+      setHidden(form, !isActive);
+      toggleClass(form, "is-active", isActive);
       form.setAttribute("aria-hidden", isActive ? "false" : "true");
-    });
-    if (dialog) {
-      dialog.dataset.activeView = view;
     }
-    title.textContent = titles[view] || "会员中心";
-    description.textContent = descriptions[view] || "";
+    if (dialog) {
+      dialog.setAttribute("data-active-view", view);
+    }
+    setText(title, titles[view] || "会员中心");
+    setText(description, descriptions[view] || "");
     setMessage("");
   }
 
-  function openModal(view = "login", options = {}) {
+  function openModal(view, options) {
+    var firstInput;
+    view = view || "login";
+    options = options || {};
     if (Object.prototype.hasOwnProperty.call(options, "download")) {
-      state.pendingDownload = Boolean(options.download);
+      state.pendingDownload = !!options.download;
     }
     setView(view);
-    modal.hidden = false;
+    setHidden(modal, false);
     document.body.style.overflow = "hidden";
-    const firstInput = modal.querySelector(`[data-member-view="${view}"] input`);
+    firstInput = modal.querySelector('[data-member-view="' + view + '"] input');
     if (firstInput) {
       firstInput.focus();
     }
   }
 
   function closeModal() {
-    modal.hidden = true;
+    setHidden(modal, true);
     document.body.style.overflow = "";
     setMessage("");
   }
 
   function updateMemberUi() {
-    menu.dataset.state = state.loggedIn ? "logged-in" : "guest";
-    const status = menu.querySelector("[data-member-status]");
-    const initial = menu.querySelector("[data-member-initial]");
+    var status = menu.querySelector("[data-member-status]");
+    var initial = menu.querySelector("[data-member-initial]");
+    menu.setAttribute("data-state", state.loggedIn ? "logged-in" : "guest");
     if (state.loggedIn && state.member) {
-      status.textContent = `${state.member.name} · ${state.member.company}`;
-      initial.textContent = state.member.initial || "R";
+      setText(status, (state.member.name || state.member.email || "会员") + " · " + (state.member.company || ""));
+      setText(initial, state.member.initial || "R");
     } else {
-      status.textContent = "未登录";
-      initial.textContent = "R";
+      setText(status, "未登录");
+      setText(initial, "R");
     }
   }
 
-  async function api(action, data = {}) {
+  function mergeData(base, extra) {
+    var key;
+    var output = {};
+    base = base || {};
+    extra = extra || {};
+    for (key in base) {
+      if (Object.prototype.hasOwnProperty.call(base, key)) {
+        output[key] = base[key];
+      }
+    }
+    for (key in extra) {
+      if (Object.prototype.hasOwnProperty.call(extra, key)) {
+        output[key] = extra[key];
+      }
+    }
+    return output;
+  }
+
+  function encodeBody(data) {
+    var pairs = [];
+    var key;
+    for (key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key) && data[key] !== undefined && data[key] !== null) {
+        pairs.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+      }
+    }
+    return pairs.join("&");
+  }
+
+  function parseAjaxResponse(text) {
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      return {
+        success: false,
+        data: {
+          message: "服务器返回格式异常，请刷新页面后重试。"
+        }
+      };
+    }
+  }
+
+  function api(action, data, onSuccess, onFailure) {
+    var xhr;
+    var body;
+    var payload;
+    onSuccess = onSuccess || function () {};
+    onFailure = onFailure || function () {};
+
     if (!config.ajaxUrl || !config.nonce) {
-      throw new Error("会员功能需要在正式 WordPress 网站中使用。");
+      onFailure(new Error("会员功能需要在正式 WordPress 网站中使用。"));
+      return;
     }
 
-    const body = new URLSearchParams({
-      action,
-      nonce: config.nonce,
-      ...data,
-    });
-    const response = await fetch(config.ajaxUrl, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+    payload = mergeData(
+      {
+        action: action,
+        nonce: config.nonce
       },
-      body,
-    });
-    const payload = await response.json();
-    if (!payload.success) {
-      throw new Error(payload.data?.message || "操作失败，请稍后重试。");
-    }
-    return payload.data || {};
+      data || {}
+    );
+    body = encodeBody(payload);
+    xhr = new XMLHttpRequest();
+    xhr.open("POST", config.ajaxUrl, true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    xhr.onreadystatechange = function () {
+      var response;
+      var errorMessage;
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      response = parseAjaxResponse(xhr.responseText || "");
+      if (!response || !response.success) {
+        errorMessage =
+          response && response.data && response.data.message
+            ? response.data.message
+            : "操作失败，请稍后重试。";
+        onFailure(new Error(errorMessage));
+        return;
+      }
+      onSuccess(response.data || {});
+    };
+    xhr.onerror = function () {
+      onFailure(new Error("网络连接失败，请检查网络后重试。"));
+    };
+    xhr.send(body);
   }
 
-  async function refreshMember() {
+  function refreshMember() {
     if (!config.ajaxUrl || !config.nonce) {
       updateMemberUi();
       return;
     }
 
-    try {
-      const data = await api("rvision_member_me");
-      state.loggedIn = Boolean(data.loggedIn);
-      state.member = data.member || null;
-      updateMemberUi();
-    } catch (error) {
-      state.loggedIn = false;
-      state.member = null;
-      updateMemberUi();
-    }
+    api(
+      "rvision_member_me",
+      {},
+      function (data) {
+        state.loggedIn = Boolean(data.loggedIn);
+        state.member = data.member || null;
+        updateMemberUi();
+      },
+      function () {
+        state.loggedIn = false;
+        state.member = null;
+        updateMemberUi();
+      }
+    );
   }
 
   function downloadCatalog() {
@@ -142,72 +295,105 @@ if ("scrollRestoration" in history) {
   }
 
   function formData(form) {
-    return Object.fromEntries(new FormData(form).entries());
+    var data = {};
+    var elements = form.elements || [];
+    var i;
+    for (i = 0; i < elements.length; i += 1) {
+      var element = elements[i];
+      if (!element.name || element.disabled) {
+        continue;
+      }
+      if ((element.type === "checkbox" || element.type === "radio") && !element.checked) {
+        continue;
+      }
+      data[element.name] = element.value;
+    }
+    return data;
   }
 
-  async function submitForm(form, action, onSuccess, extraData = {}) {
-    const submit = form.querySelector("[type='submit']");
-    submit.disabled = true;
+  function submitForm(form, action, onSuccess, extraData) {
+    var submit = form.querySelector("[type='submit']");
+    if (submit) {
+      submit.disabled = true;
+    }
     setMessage("处理中...");
-    try {
-      const data = await api(action, { ...formData(form), ...extraData });
-      await onSuccess(data, form);
-    } catch (error) {
-      setMessage(error.message, "error");
-    } finally {
-      submit.disabled = false;
-    }
+    api(
+      action,
+      mergeData(formData(form), extraData || {}),
+      function (data) {
+        if (submit) {
+          submit.disabled = false;
+        }
+        onSuccess(data, form);
+      },
+      function (error) {
+        if (submit) {
+          submit.disabled = false;
+        }
+        setMessage(error.message || "操作失败，请稍后重试。", "error");
+      }
+    );
   }
 
-  menu.querySelector("[data-member-toggle]").addEventListener("click", () => {
-    menu.classList.toggle("is-open");
+  addEvent(menu.querySelector("[data-member-toggle]"), "click", function () {
+    toggleClass(menu, "is-open", !hasClass(menu, "is-open"));
   });
 
-  document.addEventListener("click", (event) => {
-    if (!menu.contains(event.target)) {
-      menu.classList.remove("is-open");
+  addEvent(document, "click", function (event) {
+    var target = getEventTarget(event);
+    if (target && !menu.contains(target)) {
+      removeClass(menu, "is-open");
     }
   });
 
-  document.querySelectorAll("[data-member-open]").forEach((button) => {
-    button.addEventListener("click", () => openModal(button.dataset.memberOpen));
-  });
+  (function bindOpenButtons() {
+    var buttons = document.querySelectorAll("[data-member-open]");
+    var i;
+    for (i = 0; i < buttons.length; i += 1) {
+      addEvent(buttons[i], "click", function () {
+        openModal(this.getAttribute("data-member-open") || "login");
+      });
+    }
+  })();
 
-  modal.querySelectorAll("[data-member-close]").forEach((button) => {
-    button.addEventListener("click", closeModal);
-  });
+  (function bindCloseButtons() {
+    var buttons = modal.querySelectorAll("[data-member-close]");
+    var i;
+    for (i = 0; i < buttons.length; i += 1) {
+      addEvent(buttons[i], "click", closeModal);
+    }
+  })();
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !modal.hidden) {
+  addEvent(document, "keydown", function (event) {
+    var key = event.key || event.keyCode;
+    if ((key === "Escape" || key === 27) && !isHidden(modal)) {
       closeModal();
     }
   });
 
   if (catalogLink) {
-    catalogLink.addEventListener("click", (event) => {
+    addEvent(catalogLink, "click", function (event) {
       if (!state.loggedIn) {
-        event.preventDefault();
+        preventDefault(event);
         openModal("login", { download: true });
       }
     });
   }
 
-  menu.querySelector("[data-member-download]").addEventListener("click", downloadCatalog);
+  addEvent(menu.querySelector("[data-member-download]"), "click", downloadCatalog);
 
-  menu.querySelector("[data-member-logout]").addEventListener("click", async () => {
-    try {
-      await api("rvision_member_logout");
-    } catch (error) {
-      // Treat logout as local state cleanup even if the session already expired.
+  addEvent(menu.querySelector("[data-member-logout]"), "click", function () {
+    function clearMember() {
+      state.loggedIn = false;
+      state.member = null;
+      updateMemberUi();
     }
-    state.loggedIn = false;
-    state.member = null;
-    updateMemberUi();
+    api("rvision_member_logout", {}, clearMember, clearMember);
   });
 
-  modal.querySelector('[data-member-view="login"]').addEventListener("submit", (event) => {
-    event.preventDefault();
-    submitForm(event.currentTarget, "rvision_member_login", async (data) => {
+  addEvent(modal.querySelector('[data-member-view="login"]'), "submit", function (event) {
+    preventDefault(event);
+    submitForm(this, "rvision_member_login", function (data) {
       state.loggedIn = true;
       state.member = data.member;
       updateMemberUi();
@@ -218,21 +404,21 @@ if ("scrollRestoration" in history) {
     });
   });
 
-  modal.querySelector('[data-member-view="register"]').addEventListener("submit", (event) => {
-    event.preventDefault();
-    submitForm(event.currentTarget, "rvision_member_register", async (data, form) => {
+  addEvent(modal.querySelector('[data-member-view="register"]'), "submit", function (event) {
+    preventDefault(event);
+    submitForm(this, "rvision_member_register", function (data, form) {
       state.registerEmail = data.email || form.elements.email.value;
       setView("register-code");
       setMessage("验证码已发送，请输入邮箱中的 6 位验证码。", "success");
     });
   });
 
-  modal.querySelector('[data-member-view="register-code"]').addEventListener("submit", (event) => {
-    event.preventDefault();
+  addEvent(modal.querySelector('[data-member-view="register-code"]'), "submit", function (event) {
+    preventDefault(event);
     submitForm(
-      event.currentTarget,
+      this,
       "rvision_member_verify_registration",
-      async (payload) => {
+      function (payload) {
         state.loggedIn = true;
         state.member = payload.member;
         updateMemberUi();
@@ -241,40 +427,51 @@ if ("scrollRestoration" in history) {
           downloadCatalog();
         }
       },
-      { email: state.registerEmail },
+      { email: state.registerEmail }
     );
   });
 
-  modal.querySelector('[data-member-view="reset-request"]').addEventListener("submit", (event) => {
-    event.preventDefault();
-    submitForm(event.currentTarget, "rvision_member_request_password_reset", async (data, form) => {
+  addEvent(modal.querySelector('[data-member-view="reset-request"]'), "submit", function (event) {
+    preventDefault(event);
+    submitForm(this, "rvision_member_request_password_reset", function (data, form) {
       state.resetEmail = form.elements.email.value;
       setView("reset-code");
       setMessage(data.message || "验证码已发送，请检查邮箱。", "success");
     });
   });
 
-  modal.querySelector('[data-member-view="reset-code"]').addEventListener("submit", (event) => {
-    event.preventDefault();
+  addEvent(modal.querySelector('[data-member-view="reset-code"]'), "submit", function (event) {
+    preventDefault(event);
     submitForm(
-      event.currentTarget,
+      this,
       "rvision_member_reset_password",
-      async () => {
+      function () {
         setView("login");
         setMessage("密码已重置，请使用新密码登录。", "success");
       },
-      { email: state.resetEmail },
+      { email: state.resetEmail }
     );
   });
 
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("member") === "login") {
-    openModal("login", { download: params.get("next") === "catalog-download" });
-  } else if (params.get("member") === "register") {
+  function getQueryParam(name) {
+    var parts = window.location.search ? window.location.search.substring(1).split("&") : [];
+    var i;
+    for (i = 0; i < parts.length; i += 1) {
+      var pair = parts[i].split("=");
+      if (decodeURIComponent(pair[0].replace(/\+/g, " ")) === name) {
+        return decodeURIComponent((pair[1] || "").replace(/\+/g, " "));
+      }
+    }
+    return "";
+  }
+
+  if (getQueryParam("member") === "login") {
+    openModal("login", { download: getQueryParam("next") === "catalog-download" });
+  } else if (getQueryParam("member") === "register") {
     openModal("register");
   }
 
   refreshMember();
   window.__rvisionMemberReady = true;
-  document.documentElement.dataset.memberReady = "true";
+  document.documentElement.setAttribute("data-member-ready", "true");
 })();
