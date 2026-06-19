@@ -9,7 +9,6 @@ if ("scrollRestoration" in history) {
   var state = {
     loggedIn: false,
     member: null,
-    pendingDownload: false,
     registerEmail: "",
     resetEmail: ""
   };
@@ -22,10 +21,11 @@ if ("scrollRestoration" in history) {
   var message = document.querySelector("[data-member-message]");
   var title = document.querySelector("[data-member-title]");
   var description = document.querySelector("[data-member-description]");
-  var catalogLink = document.querySelector(".catalog-cta");
+  var eyebrow = document.querySelector("[data-member-eyebrow]");
   var forms = modal.querySelectorAll("[data-member-view]");
 
   var titles = {
+    "catalog-email": "接收产品目录",
     login: "会员登录",
     register: "注册会员账号",
     "register-code": "邮箱验证",
@@ -34,7 +34,8 @@ if ("scrollRestoration" in history) {
   };
 
   var descriptions = {
-    login: "输入邮箱和密码登录后即可下载产品目录。",
+    "catalog-email": "输入邮箱，我们会把 YK-C 产品目录 PDF 发送到该邮箱。",
+    login: "输入邮箱和密码登录会员账号。",
     register: "请填写注册信息，带 * 的字段为必填项。提交后会发送邮箱验证码。",
     "register-code": "请输入邮箱收到的 6 位验证码，验证后自动登录。",
     "reset-request": "输入注册邮箱，我们会发送用于找回密码的验证码。",
@@ -141,6 +142,7 @@ if ("scrollRestoration" in history) {
     }
     setText(title, titles[view] || "会员中心");
     setText(description, descriptions[view] || "");
+    setText(eyebrow, view === "catalog-email" ? "Catalog" : "Member");
     setMessage("");
   }
 
@@ -148,9 +150,6 @@ if ("scrollRestoration" in history) {
     var firstInput;
     view = view || "login";
     options = options || {};
-    if (Object.prototype.hasOwnProperty.call(options, "download")) {
-      state.pendingDownload = !!options.download;
-    }
     setView(view);
     setHidden(modal, false);
     document.body.style.overflow = "hidden";
@@ -229,7 +228,7 @@ if ("scrollRestoration" in history) {
     onFailure = onFailure || function () {};
 
     if (!config.ajaxUrl || !config.nonce) {
-      onFailure(new Error("会员功能需要在正式 WordPress 网站中使用。"));
+      onFailure(new Error("该功能需要在正式 WordPress 网站中使用。"));
       return;
     }
 
@@ -291,7 +290,7 @@ if ("scrollRestoration" in history) {
   }
 
   function downloadCatalog() {
-    window.location.href = config.downloadUrl || "/catalog-download/";
+    openModal("catalog-email");
   }
 
   function formData(form) {
@@ -371,16 +370,16 @@ if ("scrollRestoration" in history) {
     }
   });
 
-  if (catalogLink) {
-    addEvent(catalogLink, "click", function (event) {
-      if (!state.loggedIn) {
+  (function bindCatalogButtons() {
+    var buttons = document.querySelectorAll("[data-catalog-request]");
+    var i;
+    for (i = 0; i < buttons.length; i += 1) {
+      addEvent(buttons[i], "click", function (event) {
         preventDefault(event);
-        openModal("login", { download: true });
-      }
-    });
-  }
-
-  addEvent(menu.querySelector("[data-member-download]"), "click", downloadCatalog);
+        downloadCatalog();
+      });
+    }
+  })();
 
   addEvent(menu.querySelector("[data-member-logout]"), "click", function () {
     function clearMember() {
@@ -398,9 +397,14 @@ if ("scrollRestoration" in history) {
       state.member = data.member;
       updateMemberUi();
       closeModal();
-      if (state.pendingDownload) {
-        downloadCatalog();
-      }
+    });
+  });
+
+  addEvent(modal.querySelector('[data-member-view="catalog-email"]'), "submit", function (event) {
+    preventDefault(event);
+    submitForm(this, "rvision_catalog_request", function (data, form) {
+      form.reset();
+      setMessage(data.message || "产品目录已发送，请检查邮箱。", "success");
     });
   });
 
@@ -423,9 +427,6 @@ if ("scrollRestoration" in history) {
         state.member = payload.member;
         updateMemberUi();
         closeModal();
-        if (state.pendingDownload) {
-          downloadCatalog();
-        }
       },
       { email: state.registerEmail }
     );
@@ -465,8 +466,10 @@ if ("scrollRestoration" in history) {
     return "";
   }
 
-  if (getQueryParam("member") === "login") {
-    openModal("login", { download: getQueryParam("next") === "catalog-download" });
+  if (getQueryParam("catalog") === "request" || getQueryParam("next") === "catalog-download") {
+    openModal("catalog-email");
+  } else if (getQueryParam("member") === "login") {
+    openModal("login");
   } else if (getQueryParam("member") === "register") {
     openModal("register");
   }

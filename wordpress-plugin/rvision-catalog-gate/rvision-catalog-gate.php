@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Rvision Catalog Gate
- * Description: Adds YK-C product homepage, member login, email verification, and protected catalog download for R vision.
- * Version: 1.1.5
+ * Description: Adds YK-C product homepage, member login, email verification, and email-based catalog delivery for R vision.
+ * Version: 1.1.6
  * Author: R vision
  */
 
@@ -49,6 +49,8 @@ final class Rvision_Catalog_Gate
         add_action('wp_ajax_rvision_member_request_password_reset', [$plugin, 'ajax_request_password_reset']);
         add_action('wp_ajax_nopriv_rvision_member_reset_password', [$plugin, 'ajax_reset_password']);
         add_action('wp_ajax_rvision_member_reset_password', [$plugin, 'ajax_reset_password']);
+        add_action('wp_ajax_nopriv_rvision_catalog_request', [$plugin, 'ajax_catalog_request']);
+        add_action('wp_ajax_rvision_catalog_request', [$plugin, 'ajax_catalog_request']);
     }
 
     public function activate(): void
@@ -260,7 +262,7 @@ final class Rvision_Catalog_Gate
         ?>
         <div class="wrap">
             <h1>Rvision 会员管理</h1>
-            <p>目录下载已启用会员登录保护。验证码邮件通过下方 SMTP 配置发送。</p>
+            <p>目录下载通过邮箱发送 PDF 附件。会员功能保留，验证码和目录邮件均通过下方 SMTP 配置发送。</p>
             <form method="post" action="options.php">
                 <?php settings_fields('rvision_catalog_gate'); ?>
                 <h2>目录文件</h2>
@@ -280,7 +282,7 @@ final class Rvision_Catalog_Gate
                         <td>
                             <label>
                                 <input name="<?php echo esc_attr(self::OPTION_KEY); ?>[smtp_enabled]" value="1" type="checkbox" <?php checked($options['smtp_enabled'], '1'); ?> />
-                                使用 SMTP 发送注册和找回密码验证码
+                                使用 SMTP 发送注册验证码、找回密码验证码和产品目录邮件
                             </label>
                         </td>
                     </tr>
@@ -361,12 +363,12 @@ final class Rvision_Catalog_Gate
                 </tbody>
             </table>
 
-            <h2>最近下载记录</h2>
+            <h2>最近目录发送记录</h2>
             <table class="widefat striped">
                 <thead>
                     <tr>
                         <th>邮箱</th>
-                        <th>下载时间</th>
+                        <th>发送时间</th>
                         <th>IP</th>
                     </tr>
                 </thead>
@@ -437,26 +439,7 @@ final class Rvision_Catalog_Gate
 
     private function handle_download(): void
     {
-        $member = $this->current_member();
-        if (!$member) {
-            wp_safe_redirect(home_url('/?member=login&next=catalog-download'));
-            exit;
-        }
-
-        $file = $this->catalog_file();
-        if (!is_readable($file)) {
-            wp_die('目录文件暂不可用，请联系销售工程师。');
-        }
-
-        $this->log_download($member);
-
-        status_header(200);
-        nocache_headers();
-        header('Content-Type: application/pdf');
-        header('Content-Length: ' . filesize($file));
-        header('Content-Disposition: attachment; filename="Rvision-YK-C-Catalog.pdf"');
-        header('X-Content-Type-Options: nosniff');
-        readfile($file);
+        wp_safe_redirect(home_url('/?catalog=request'));
         exit;
     }
 
@@ -694,6 +677,32 @@ final class Rvision_Catalog_Gate
         wp_send_json_success(['message' => '密码已重置，请重新登录。']);
     }
 
+    public function ajax_catalog_request(): void
+    {
+        $this->require_ajax_nonce();
+
+        $email = strtolower(sanitize_email(wp_unslash($_POST['email'] ?? '')));
+        if (!is_email($email)) {
+            wp_send_json_error(['message' => '请填写有效的邮箱地址。'], 400);
+        }
+
+        $file = $this->catalog_file();
+        if (!is_readable($file)) {
+            wp_send_json_error(['message' => '目录文件暂不可用，请联系销售工程师。'], 500);
+        }
+
+        if (!$this->send_catalog_email($email, $file)) {
+            wp_send_json_error(['message' => '目录邮件发送失败，请稍后重试或联系销售工程师。'], 500);
+        }
+
+        $this->log_catalog_request($email);
+
+        wp_send_json_success([
+            'message' => '产品目录已发送，请检查邮箱。',
+            'email' => $email,
+        ]);
+    }
+
     public function configure_smtp($phpmailer): void
     {
         $options = $this->options();
@@ -800,6 +809,16 @@ final class Rvision_Catalog_Gate
         return wp_mail($email, $title, $body, ['Content-Type: text/html; charset=UTF-8']);
     }
 
+    private function send_catalog_email(string $email, string $file): bool
+    {
+        $title = 'Rvision YK-C 产品目录';
+        $body = '<p>您好，感谢关注 Rvision 睿视智能 YK-C 外夹式超声波流量计。</p>'
+            . '<p>产品目录 PDF 已随邮件附件发送，请查收。</p>'
+            . '<p>如需选型支持，请直接回复本邮件或联系销售工程师。</p>';
+
+        return wp_mail($email, $title, $body, ['Content-Type: text/html; charset=UTF-8'], [$file]);
+    }
+
     private function current_member()
     {
         global $wpdb;
@@ -902,6 +921,18 @@ final class Rvision_Catalog_Gate
         $wpdb->insert($this->downloads_table(), [
             'member_id' => (int)$member->id,
             'email' => $member->email,
+            'downloaded_at' => $this->now(),
+            'user_agent' => $this->user_agent(),
+            'ip' => $this->client_ip(),
+        ]);
+    }
+
+    private function log_catalog_request(string $email): void
+    {
+        global $wpdb;
+        $wpdb->insert($this->downloads_table(), [
+            'member_id' => 0,
+            'email' => $email,
             'downloaded_at' => $this->now(),
             'user_agent' => $this->user_agent(),
             'ip' => $this->client_ip(),

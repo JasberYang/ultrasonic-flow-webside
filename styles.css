@@ -1175,6 +1175,7 @@ h3 {
 }
 
 .member-dialog[data-active-view="login"],
+.member-dialog[data-active-view="catalog-email"],
 .member-dialog[data-active-view="register-code"],
 .member-dialog[data-active-view="reset-request"],
 .member-dialog[data-active-view="reset-code"] {
