@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Rvision Catalog Gate
  * Description: Adds YK-C product homepage, member login, email verification, and email-based catalog delivery for R vision.
- * Version: 1.1.6
+ * Version: 1.1.7
  * Author: R vision
  */
 
@@ -51,6 +51,8 @@ final class Rvision_Catalog_Gate
         add_action('wp_ajax_rvision_member_reset_password', [$plugin, 'ajax_reset_password']);
         add_action('wp_ajax_nopriv_rvision_catalog_request', [$plugin, 'ajax_catalog_request']);
         add_action('wp_ajax_rvision_catalog_request', [$plugin, 'ajax_catalog_request']);
+        add_action('wp_ajax_nopriv_rvision_member_nonce', [$plugin, 'ajax_nonce']);
+        add_action('wp_ajax_rvision_member_nonce', [$plugin, 'ajax_nonce']);
     }
 
     public function activate(): void
@@ -675,6 +677,13 @@ final class Rvision_Catalog_Gate
         $wpdb->delete($this->sessions_table(), ['member_id' => (int)$member->id]);
 
         wp_send_json_success(['message' => '密码已重置，请重新登录。']);
+    }
+
+    public function ajax_nonce(): void
+    {
+        wp_send_json_success([
+            'nonce' => wp_create_nonce('rvision_member'),
+        ]);
     }
 
     public function ajax_catalog_request(): void

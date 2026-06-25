@@ -220,7 +220,42 @@ if ("scrollRestoration" in history) {
     }
   }
 
-  function api(action, data, onSuccess, onFailure) {
+  function requestFreshNonce(onComplete) {
+    var xhr;
+    var body;
+
+    if (!config.ajaxUrl) {
+      onComplete(false);
+      return;
+    }
+
+    body = encodeBody({
+      action: "rvision_member_nonce"
+    });
+    xhr = new XMLHttpRequest();
+    xhr.open("POST", config.ajaxUrl, true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    xhr.onreadystatechange = function () {
+      var response;
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      response = parseAjaxResponse(xhr.responseText || "");
+      if (response && response.success && response.data && response.data.nonce) {
+        config.nonce = response.data.nonce;
+        onComplete(true);
+        return;
+      }
+      onComplete(false);
+    };
+    xhr.onerror = function () {
+      onComplete(false);
+    };
+    xhr.send(body);
+  }
+
+  function api(action, data, onSuccess, onFailure, didRefreshNonce) {
     var xhr;
     var body;
     var payload;
@@ -228,7 +263,13 @@ if ("scrollRestoration" in history) {
     onFailure = onFailure || function () {};
 
     if (!config.ajaxUrl || !config.nonce) {
-      onFailure(new Error("该功能需要在正式 WordPress 网站中使用。"));
+      requestFreshNonce(function (refreshed) {
+        if (refreshed) {
+          api(action, data, onSuccess, onFailure, true);
+          return;
+        }
+        onFailure(new Error("该功能需要在正式 WordPress 网站中使用。"));
+      });
       return;
     }
 
@@ -256,6 +297,16 @@ if ("scrollRestoration" in history) {
           response && response.data && response.data.message
             ? response.data.message
             : "操作失败，请稍后重试。";
+        if (!didRefreshNonce && xhr.status === 403 && errorMessage.indexOf("页面已过期") > -1) {
+          requestFreshNonce(function (refreshed) {
+            if (refreshed) {
+              api(action, data, onSuccess, onFailure, true);
+              return;
+            }
+            onFailure(new Error(errorMessage));
+          });
+          return;
+        }
         onFailure(new Error(errorMessage));
         return;
       }
